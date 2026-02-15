@@ -62,5 +62,5 @@ jobs:
         run: docker exec gorao curl -f --insecure "https://127.0.0.1:8053/dns-query?dns=EjQBAAABAAAAAAAAA3d3dwZnb29nbGUDY29tAAABAAE"
 
       - name: Test DoQ (8853)
-        # Using dockerized kdig for QUIC support assurance
-        run: docker run --rm --net=host adalchev/kdig @127.0.0.1 -p 8853 +quic google.com
+        # Using dockerized q for QUIC support assurance
+        run: docker run --rm --net=host ghcr.io/natesales/q:latest @quic://127.0.0.1:8853 google.com
