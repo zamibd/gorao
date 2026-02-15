@@ -1,0 +1,5 @@
+# DNS Redirect Rules
+# One domain pattern per line
+# Lines starting with # are ignored
+# Example: *.example.com
+*.imzami.com

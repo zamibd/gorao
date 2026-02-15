@@ -1,0 +1,22 @@
+services:
+  gorao:
+    build: .
+    container_name: gorao
+    restart: unless-stopped
+    ports:
+      - "53:53/tcp" # DNS TCP port
+      - "53:53/udp" # DNS UDP port
+      - "8080:8080/tcp" # HTTP port
+      - "443:443/tcp" # HTTPS port
+      - "853:853/tcp" # DoT port
+      - "8443:8443/tcp" # DoH port
+      - "8853:8853/udp" # DoQ port
+    volumes:
+      - ./config.yaml:/app/config.yaml
+      - ./domains-forward.csv:/app/domains-forward.csv:ro
+      - ./dns-redirect.csv:/app/dns-redirect.csv:ro
+      - ./domains-block.csv:/app/domains-block.csv:ro
+      - ./domains-drop.csv:/app/domains-drop.csv:ro
+      - ./certs:/app/certs:ro
+    environment:
+      - TZ=Asia/Dhaka

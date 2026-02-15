@@ -1,0 +1,94 @@
+# The IP address the DNS proxy server will be listening to.
+dns_address: 0.0.0.0
+# Port the DNS proxy server will be listening to.
+dns_port: 53
+# The address of the DNS server the proxy will forward queries that are not rewritten to the SNI proxy.
+dns_upstream: 1.1.1.1
+# IPv4 address that will be used for redirecting type A DNS queries.
+# IMPORTANT: Change this to your server's PUBLIC IP address for production.
+dns_redirect_ipv4_to: 160.25.7.220
+# IP address the SNI proxy server will be listening for plain HTTP connections.
+http_address: 0.0.0.0
+# Port the SNI proxy server will be listening for plain HTTP connections.
+http_port: 8080
+# IP address the SNI proxy server will be listening for TLS connections.
+tls_address: 0.0.0.0
+# Port the SNI proxy server will be listening for TLS connections.
+tls_port: 443
+
+# IP address the DNS proxy server will be listening for DNS-over-TLS connections.
+dot_address: 0.0.0.0
+# Port the DNS proxy server will be listening for DNS-over-TLS connections.
+dot_port: 853
+
+# IP address the DNS proxy server will be listening for DNS-over-HTTPS connections.
+doh_address: 0.0.0.0
+# Port the DNS proxy server will be listening for DNS-over-HTTPS connections.
+doh_port: 8443
+
+# IP address the DNS proxy server will be listening for DNS-over-QUIC connections.
+doq_address: 0.0.0.0
+# Port the DNS proxy server will be listening for DNS-over-QUIC connections.
+doq_port: 8853
+
+# Path to the TLS certificate file (required for DoT/DoH).
+# Path to the TLS certificate file (required for DoT/DoH).
+tls_cert_file: "certs/cert.pem"
+# Path to the TLS private key file (required for DoT/DoH).
+tls_key_file: "certs/key.pem"
+
+# Address of a SOCKS/HTTP/HTTPS proxy that the connections will be forwarded to.
+forward_proxy: "socks5://username:password@IP:PORT"
+# Verbose output (optional). Disable for production.
+verbose: false
+
+# DNS cache configuration
+# Enable DNS response caching to reduce upstream queries
+dns_cache_enabled: true
+# Cache size in bytes (64MB)
+dns_cache_size: 67108864
+# Minimum TTL for cached entries in seconds (1 minute)
+dns_cache_min_ttl: 60
+# Maximum TTL for cached entries in seconds (1 hour)
+dns_cache_max_ttl: 3600
+
+# Path to the log file. If not set, write to stdout.
+# output: "/var/log/gorao.log"
+
+# IPv6 address that will be used for redirecting type AAAA DNS queries.
+# dns_redirect_ipv6_to: ""
+
+# Wildcard that defines which domains should be redirected to the SNI proxy.
+# Can be specified multiple times. Default is "*".
+# Load from CSV file for easier management
+dns_redirect_rules: []
+dns_redirect_rules_file: "dns-redirect.csv"
+
+# Wildcard that defines DNS queries to which domains should be dropped.
+# Can be specified multiple times.
+# dns_drop_rules:
+#   - "example.com"
+
+# Wildcard that defines what connections will be forwarded to forward-proxy.
+# If no rules are specified, all connections will be forwarded.
+# Load from CSV file for easier management
+forward_rules: []
+forward_rules_file: "domains-forward.csv"
+
+# Wildcard that defines connections to which domains should be blocked.
+# Load from CSV file for easier management
+block_rules: []
+block_rules_file: "domains-block.csv"
+
+# Wildcard that defines connections to which domains should be dropped
+# (delayed for 3 minutes).
+# Load from CSV file for easier management
+drop_rules: []
+drop_rules_file: "domains-drop.csv"
+
+# Bytes per second the connections speed will be limited to.
+# bandwidth_rate: 1024
+
+# Defines connection speed in bytes/sec for specific domains.
+# bandwidth_rules:
+#   "example.org": 1024

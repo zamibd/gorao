@@ -1,0 +1,7 @@
+# Drop Rules
+# Add domain patterns to drop/delay (one per line)
+# These connections will be delayed for 3 minutes
+# Examples:
+# *.slow-domain.com
+# *.throttle-this.com
+# test-drop.com

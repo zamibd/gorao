@@ -1,0 +1,61 @@
+name: Go
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.25.7'
+
+    - name: Build
+      run: go build -v ./...
+
+    - name: Test
+      run: go test -v ./...
+
+  integration-test:
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install DNS Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dnsutils curl
+
+      - name: Build and Start Container
+        run: docker compose up -d --build
+
+      - name: Wait for Healthcheck
+        run: |
+          echo "Waiting for container to be healthy..."
+          timeout 60s sh -c 'until docker ps | grep gorao | grep "(healthy)"; do sleep 1; done'
+
+      - name: Test UDP (53)
+        run: dig +short @127.0.0.1 -p 53 google.com
+
+      - name: Test TCP (53)
+        run: dig +short @127.0.0.1 -p 53 +tcp google.com
+
+      - name: Test DoT (853)
+        run: echo "google.com" | openssl s_client -connect 127.0.0.1:853 -quiet
+
+      - name: Test DoH (8443)
+        # Using curl for DoH as reliable alternative if kdig is missing/old
+        run: curl -f --insecure "https://127.0.0.1:8443/dns-query?name=google.com&type=A"
+
+      - name: Test DoQ (8853)
+        # Using dockerized kdig for QUIC support assurance
+        run: docker run --rm --net=host adalchev/kdig @127.0.0.1 -p 8853 +quic google.com

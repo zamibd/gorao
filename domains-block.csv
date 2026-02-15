@@ -1,0 +1,7 @@
+# Block Rules
+# Add domain patterns to block (one per line)
+# Examples:
+# *.malware-site.com
+# *.ads-domain.com
+# *.tracking-domain.com
+# test-block.com
