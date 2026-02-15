@@ -59,7 +59,7 @@ jobs:
 
       - name: Test DoH (8053)
         # Using curl for DoH as reliable alternative if kdig is missing/old
-        run: curl -f --insecure "https://127.0.0.1:8053/dns-query?name=google.com&type=A"
+        run: docker exec gorao curl -f --insecure "https://127.0.0.1:8053/dns-query?name=google.com&type=A"
 
       - name: Test DoQ (8853)
         # Using dockerized kdig for QUIC support assurance
