@@ -63,4 +63,4 @@ jobs:
 
       - name: Test DoQ (8853)
         # Using dockerized q for QUIC support assurance
-        run: docker run --rm --net=host ghcr.io/natesales/q:latest @quic://127.0.0.1:8853 google.com
+        run: docker run --rm --net=host ghcr.io/natesales/q:latest -i @quic://127.0.0.1:8853 google.com
