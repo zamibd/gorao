@@ -35,6 +35,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y dnsutils curl
 
+      - name: Free Port 53
+        run: |
+          sudo sed -i 's/#DNS=/DNS=8.8.8.8/; s/#DNSStubListener=yes/DNSStubListener=no/' /etc/systemd/resolved.conf
+          sudo systemctl restart systemd-resolved
+
       - name: Build and Start Container
         run: docker compose up -d --build
 
@@ -52,9 +57,9 @@ jobs:
       - name: Test DoT (853)
         run: echo "google.com" | openssl s_client -connect 127.0.0.1:853 -quiet
 
-      - name: Test DoH (8443)
+      - name: Test DoH (8053)
         # Using curl for DoH as reliable alternative if kdig is missing/old
-        run: curl -f --insecure "https://127.0.0.1:8443/dns-query?name=google.com&type=A"
+        run: curl -f --insecure "https://127.0.0.1:8053/dns-query?name=google.com&type=A"
 
       - name: Test DoQ (8853)
         # Using dockerized kdig for QUIC support assurance

@@ -4,6 +4,7 @@ package cmd
 import (
 	"fmt"
 	"io"
+	"log/slog"
 	"os"
 	"os/signal"
 	"strings"
@@ -58,7 +59,13 @@ func Main() {
 
 	if options.Verbose {
 		log.SetLevel(log.DEBUG)
+		opts := &slog.HandlerOptions{
+			Level: slog.LevelDebug,
+		}
+		logger := slog.New(slog.NewTextHandler(os.Stderr, opts))
+		slog.SetDefault(logger)
 	}
+
 	if options.LogOutput != "" {
 		var file *os.File
 		file, err = os.OpenFile(options.LogOutput, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0o600)
@@ -113,7 +120,7 @@ type Proxy interface {
 
 // run starts reads the configuration options and starts the gorao.
 func run(options *Options) {
-	log.Info("cmd: run gorao with the following configuration:\n%s", options)
+	log.Info("cmd: run gorao with the following configuration:\n%s", options.String())
 
 	dnsProxy := newDNSProxy(options)
 	err := dnsProxy.Start()

@@ -8,13 +8,13 @@ dns_upstream: 1.1.1.1
 # IMPORTANT: Change this to your server's PUBLIC IP address for production.
 dns_redirect_ipv4_to: 160.25.7.220
 # IP address the SNI proxy server will be listening for plain HTTP connections.
-http_address: 0.0.0.0
+http_address: 127.0.0.1
 # Port the SNI proxy server will be listening for plain HTTP connections.
 http_port: 8080
 # IP address the SNI proxy server will be listening for TLS connections.
 tls_address: 0.0.0.0
 # Port the SNI proxy server will be listening for TLS connections.
-tls_port: 443
+tls_port: 8443
 
 # IP address the DNS proxy server will be listening for DNS-over-TLS connections.
 dot_address: 0.0.0.0
@@ -22,9 +22,9 @@ dot_address: 0.0.0.0
 dot_port: 853
 
 # IP address the DNS proxy server will be listening for DNS-over-HTTPS connections.
-doh_address: 0.0.0.0
+doh_address: 127.0.0.1
 # Port the DNS proxy server will be listening for DNS-over-HTTPS connections.
-doh_port: 8443
+doh_port: 8053
 
 # IP address the DNS proxy server will be listening for DNS-over-QUIC connections.
 doq_address: 0.0.0.0
@@ -38,9 +38,9 @@ tls_cert_file: "certs/cert.pem"
 tls_key_file: "certs/key.pem"
 
 # Address of a SOCKS/HTTP/HTTPS proxy that the connections will be forwarded to.
-forward_proxy: "socks5://username:password@IP:PORT"
+forward_proxy: "socks5://imzami:11221099@103.187.22.195:10880"
 # Verbose output (optional). Disable for production.
-verbose: false
+verbose: true
 
 # DNS cache configuration
 # Enable DNS response caching to reduce upstream queries

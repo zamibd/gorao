@@ -180,7 +180,7 @@ func (p *Gorao) acceptLoop(l net.Listener, plainHTTP bool) {
 		go func() {
 			cErr := p.handleConnection(conn, plainHTTP)
 			if cErr != nil {
-				log.Debug("gorao: error handling connection: %v", err)
+				log.Debug("gorao: error handling connection: %v", cErr)
 			}
 		}()
 	}

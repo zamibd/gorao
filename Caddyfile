@@ -1,0 +1,65 @@
+{
+    email admin@imzami.com
+
+    servers {
+        protocols h1 h2 h3
+        max_header_size 16kb
+    }
+}
+
+api.imzami.com {
+
+    tls /certs/cert.pem /certs/key.pem {
+        protocols tls1.2 tls1.3
+        ciphers TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256 TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+    }
+
+    encode gzip zstd
+
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "no-referrer"
+        X-XSS-Protection "1; mode=block"
+        Permissions-Policy "geolocation=(), microphone=(), camera=()"
+        -Server
+    }
+
+    request_body {
+        max_size 10MB
+    }
+
+    reverse_proxy https://127.0.0.1:8053 {
+
+        lb_policy least_conn
+        header_up -X-Forwarded-For
+        header_up -X-Real-IP
+        header_up -X-Forwarded-Proto
+        header_up -X-Forwarded-Host
+
+        transport http {
+            tls_insecure_skip_verify
+            tls_server_name api.imzami.com
+            dial_timeout 5s
+            response_header_timeout 10s
+            read_timeout 30s
+            write_timeout 30s
+            keepalive 90s
+            keepalive_idle_conns 32
+        }
+
+        fail_duration 30s
+        max_fails 3
+    }
+
+    log {
+        output file /data/caddy.log {
+            roll_size 50mb
+            roll_keep 10
+            roll_keep_for 720h
+        }
+        format json
+        level INFO
+    }
+}

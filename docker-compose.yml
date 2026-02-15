@@ -6,10 +6,13 @@ services:
     ports:
       - "53:53/tcp" # DNS TCP port
       - "53:53/udp" # DNS UDP port
-      - "8080:8080/tcp" # HTTP port
-      - "443:443/tcp" # HTTPS port
+      #  - "8080:8080" # SNI proxy HTTP port
+      - "80:80/tcp" # Caddy HTTP port
+      - "443:443/tcp" # Caddy HTTPS port
+      - "443:443/udp" # Caddy HTTP/3 port
+      - "8443:8443/tcp" # HTTPS port (SNI TLS)
       - "853:853/tcp" # DoT port
-      - "8443:8443/tcp" # DoH port
+      #  - "8053:8053/tcp" # DoH port
       - "8853:8853/udp" # DoQ port
     volumes:
       - ./config.yaml:/app/config.yaml
@@ -20,3 +23,19 @@ services:
       - ./certs:/app/certs:ro
     environment:
       - TZ=Asia/Dhaka
+
+  caddy:
+    image: caddy:latest
+    restart: unless-stopped
+    network_mode: "service:gorao"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./certs:/certs:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - gorao
+
+volumes:
+  caddy_data:
+  caddy_config:

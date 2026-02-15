@@ -1,6 +1,9 @@
 package cmd
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"net/url"
+)
 
 // Options represents console arguments.
 type Options struct {
@@ -145,8 +148,17 @@ type Options struct {
 }
 
 // String implements fmt.Stringer interface for Options.
+// String implements fmt.Stringer interface for Options.
 func (o *Options) String() (s string) {
-	b, _ := json.MarshalIndent(o, "", "    ")
+	// Create a shallow copy to avoid modifying the original options
+	oCopy := *o
+	if oCopy.ForwardProxy != "" {
+		if u, err := url.Parse(oCopy.ForwardProxy); err == nil {
+			oCopy.ForwardProxy = u.Redacted()
+		}
+	}
+
+	b, _ := json.MarshalIndent(oCopy, "", "    ")
 	return string(b)
 }
 

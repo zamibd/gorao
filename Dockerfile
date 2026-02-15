@@ -45,20 +45,20 @@ RUN chown gorao:gorao /app/gorao && \
 # Expose ports
 # DNS
 EXPOSE 53/udp 53/tcp
-# HTTP
-EXPOSE 80/tcp
-# HTTPS
-EXPOSE 443/tcp
+# HTTP/HTTPS
+EXPOSE 80/tcp 443/tcp 443/udp
+# HTTPS (SNI TLS)
+EXPOSE 8443/tcp
 # DoT
 EXPOSE 853/tcp
 # DoH
-EXPOSE 8443/tcp
+EXPOSE 8053/tcp
 # DoQ
 EXPOSE 8853/udp
 
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f --insecure https://127.0.0.1:8443/dns-query?name=google.com&type=A || exit 1
+    CMD curl -f --insecure "https://127.0.0.1:8053/dns-query?dns=EjQBAAABAAAAAAAAA3d3dwZnb29nbGUDY29tAAABAAE" || exit 1
 
 # Switch to non-root user
 USER gorao
